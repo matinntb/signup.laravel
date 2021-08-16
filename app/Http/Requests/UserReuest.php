@@ -25,7 +25,7 @@ class UserReuest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'required|min:2|max:30|alpha_space', //alpha_space and persian_alpha use Anetwork/Validation library
+            'first_name' => 'required|min:2|max:30|alpha_space', //alpha_space use Anetwork/Validation library. to use it Enter composer require Anetwork/Validation in terminal
             'last_name' => 'required|min:2|max:30|alpha_space',
             'email' => 'required|email|max:100',
             'password' => ['required','min:5','max:30','regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{5,30}$/'],
