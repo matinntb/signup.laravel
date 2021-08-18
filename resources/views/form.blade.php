@@ -51,7 +51,7 @@
                             <div class="required field">
                                 <label for="email">ایمیل</label>
                                 <div class="ui icon input">
-                                    <input type="email" name="email" id="email" class="input" placeholder="ایمیل" value="{{old('email')}}">
+                                    <input name="email" id="email" class="input" placeholder="ایمیل" value="{{old('email')}}">
                                     <i class="envelope icon"></i>
                                 </div>
                                 @error('email')
@@ -100,6 +100,10 @@
         </div>
     </div>
     </div>
-
+    <script>
+        var message_js;
+        @if(Session::has('alert-success'))
+            message_js = "{{ Session::get('alert-success') }}";
+        @endif
+    </script>
 @endsection
-

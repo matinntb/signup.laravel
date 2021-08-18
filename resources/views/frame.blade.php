@@ -8,10 +8,10 @@
     @include('header')
 
     <!--include my css and js files-->
-    @stack('script')
     @stack('css')
 </head>
 <body>
     @yield('content')
+    @stack('script')
 </body>
 </html>

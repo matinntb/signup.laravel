@@ -1,19 +1,4 @@
 $(document).ready(function () {
-  // this function checks the inputs have error or not and also checks that they are empty or not
-  function check_validate(){
-    if ($("#first_name").parent().parent().hasClass("error") || $("#last_name").parent().parent().hasClass("error") || $("#email").parent().parent().hasClass("error") ||
-     $("#password").parent().parent().hasClass("error") || $("#password_confirmation").parent().parent().hasClass("error") || $('#checkbox').parent().parent().hasClass("error") ||
-     !$('#first_name').val() || !$('#last_name').val() || !$('#email').val() || !$('#password').val() || !$('#password_confirmation').val() || $('#checkbox').is(':checked')==false){
-
-      return false
-    }
-
-    else{
-
-      return true
-    }
-
-  }
 
   // front-end validation using semantic form-validation
 
@@ -35,7 +20,11 @@ $(document).ready(function () {
           {
             type   : 'maxLength[30]',
             prompt : 'نام نباید بیشتر از 30 کاراکتر باشد'
-          }
+          },
+          // {
+          //   type   : 'regExp[/^[a-zA-Z ]*$/]',
+          //   prompt : 'نام باید شامل حروف و فاصله باشد'
+          // }
         ]
       },
       last_name: {
@@ -52,7 +41,11 @@ $(document).ready(function () {
           {
             type   : 'maxLength[30]',
             prompt : 'نام خانوادگی نباید بیشتر از 30 کاراکتر باشد'
-          }
+          },
+            // {
+            //     type   : 'regExp[/^[\u0600-\u06FF ]*$/]',
+            //     prompt : 'نام خانوادگی باید شامل حروف و فاصله باشد'
+            // }
         ]
       },
       email: {
@@ -115,24 +108,24 @@ $(document).ready(function () {
 
   });
 
-  $('#signup-form').submit(function(e){
+    $('#button').click(function(){
 
-      $('#button').transition('pulse');
+        $(this).transition('pulse');
 
-      if(check_validate()){
+    });
 
-          Swal.fire({
+    if (message_js != undefined && message_js == "Success"){
 
-              icon: 'success',
+        Swal.fire({
 
-              title: 'ثبت نام با موفقیت انجام شد',
+            icon: 'success',
 
-              confirmButtonText: "باشه"
+            title: 'عملیات با موفقیت انجام شد',
 
-          })
-      }
-      else{
-          e.preventDefault()
-      }
-  });
+            confirmButtonText: "اوکی"
+
+        })
+    }
+
 });
+

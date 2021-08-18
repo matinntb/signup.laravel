@@ -36,15 +36,12 @@ class FormController extends Controller
      */
     public function store(UserReuest $request)
     {
-        //
 
         $data = $request->only(['first_name','last_name','email','password','password_confirmation']);
-        echo $data['first_name'];
-        echo $data['last_name'];
-        echo $data['email'];
-        echo $data['password'];
 
-        return $data;
+        $request->session()->flash('alert-success', 'Success');
+
+        return redirect("/signup");
 
     }
 
