@@ -1,0 +1,47 @@
+@font-face {
+    font-family: vazir-Thin;
+    src: url(../font/vazir/vazir-Thin.woff);
+}
+
+body{
+    background-image : url("../img/background.png");
+    background-size : cover;
+    background-position : center;
+    font-family : vazir-Thin;
+}
+
+.swal2-title, .swal2-styled.swal2-confirm{
+    font-family: vazir-Thin;
+}
+
+.ui.two.column.centered.grid{
+    display: flex;
+    align-items: center;
+    height :100vh;
+    margin:0px;
+}
+
+.register-img{
+    width: 100%;
+}
+.buttons{
+    width: 80%;
+    height: 100%;
+    margin-top:4%;
+}
+.fluid.ui.button{
+    background-color: #a69ccb;
+    cursor: pointer;
+    font-family: vazir-Thin;
+    margin-bottom:10%;
+    height: 35%;
+    padding: 8% 0;
+    color: white;
+}
+
+@media only screen and (max-width: 990px) {
+    #button{
+        margin: 30px 0;
+        height: 60px;
+    }
+}

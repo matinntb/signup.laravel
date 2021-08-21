@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserReuest;
 use Illuminate\Http\Request;
+use DB;
 
 class FormController extends Controller
 {
@@ -14,8 +15,7 @@ class FormController extends Controller
      */
     public function index()
     {
-        //
-        return view('form');
+
     }
 
     /**
@@ -25,7 +25,8 @@ class FormController extends Controller
      */
     public function create()
     {
-        //
+        return view('signup.signup');
+
     }
 
     /**
@@ -39,9 +40,18 @@ class FormController extends Controller
 
         $data = $request->only(['first_name','last_name','email','password','password_confirmation']);
 
+        DB::table('users_data')->insert([
+            [
+                'first_name' => $data['first_name'],
+                'last_name' => $data['last_name'],
+                'email' => $data['email'],
+                'password' => $data['password'],
+            ]
+        ]);
+
         $request->session()->flash('alert-success', 'Success');
 
-        return redirect("/signup");
+        return redirect("/home2");
 
     }
 
@@ -64,7 +74,9 @@ class FormController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = DB::table('users_data')->find($id);
+
+        return view('edit.edit' ,compact('user'));
     }
 
     /**
@@ -74,9 +86,21 @@ class FormController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserReuest $request, $id)
     {
-        //
+        $data = $request->only(['first_name','last_name','email','password']);
+
+        $user = DB::table('users_data')->where('id',$id);
+        $user->update([
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'] ,
+            'email' => $data['email'],
+            'password' => $data['password']
+        ]);
+
+        $request->session()->flash('alert-success', 'Success');
+
+        return redirect("/home2");
     }
 
     /**

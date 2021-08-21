@@ -1,12 +1,12 @@
-@extends('frame')
+@extends('signup.signup-frame')
 
 @section('title','صفحه ثبت نام')
 @push('script')
-    <script type="text/javascript" src="assets/js/js-signup.js"></script>
+    <script type="text/javascript" src="/assets/js/js-signup.js"></script>
 @endpush
 
 @push('css')
-    <link type="text/css" rel="stylesheet" href="assets/css/css-signup.css">
+    <link type="text/css" rel="stylesheet" href="/assets/css/css-signup.css">
 @endpush
 
 @section('content')
@@ -16,10 +16,10 @@
             <div class="ui raised segment" >
                 <div class="ui doubling stackable two column grid" id="form-image-div">
                     <div class="middle aligned column" id="center">
-                        <img class="register-img" src="assets/img/register.jpg">
+                        <img class="register-img" src="/assets/img/register.jpg">
                     </div>
                     <div class="column">
-                        <form action="" method="post" class="ui form" id="signup-form" >
+                        <form action="{{ url("/user") }}" method="post" class="ui form" id="signup-form" >
                             @csrf
                             @method('POST')
                             <h1 class="ui center aligned header">
@@ -100,10 +100,4 @@
         </div>
     </div>
     </div>
-    <script>
-        var message_js;
-        @if(Session::has('alert-success'))
-            message_js = "{{ Session::get('alert-success') }}";
-        @endif
-    </script>
 @endsection

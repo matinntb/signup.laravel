@@ -15,4 +15,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('/signup','FormController');
+Route::get('/home',function (){
+    return view('home.home');
+});
+Route::get('/home2',function (){
+    return view('home2.home2');
+});
+Route::resource('/get_user','GetUserController');
+Route::resource('/user','FormController');

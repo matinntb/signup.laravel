@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Requests;
-use Illuminate\Validation\Rule;
+
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserReuest extends FormRequest
+class ExistEmailRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,15 +23,16 @@ class UserReuest extends FormRequest
      */
     public function rules()
     {
-        $users = $this->route('user');
-
         return [
-            'first_name' => 'required|min:2|max:30|alpha_space', //alpha_space use Anetwork/Validation library. to use it Enter composer require Anetwork/Validation in terminal
-            'last_name' => 'required|min:2|max:30|alpha_space',
-            'email' => ['required','email','max:100'],
+            'email' => ['required','email','max:100','exists:users_data,email'],
             'password' => ['required','min:5','max:30','regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{5,30}$/'],
-            'password_confirmation' => 'same:password',
-            'checkbox' => 'required'
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'email.exists' => 'این ایمیل وجود ندارد',
+
         ];
     }
 }
