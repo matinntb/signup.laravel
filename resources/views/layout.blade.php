@@ -12,6 +12,16 @@
 </head>
 <body>
     @yield('content')
+
+    @if(Session()->has('alert'))}}
+        @foreach(session('alert') as $alert)
+            <script>
+                var alert_msg = "{{ $alert['msg'] }}";
+                var alert_type = "{{ $alert['type'] }}";
+            </script>
+        @endforeach
+    @endif
+
     @stack('script')
 </body>
 </html>

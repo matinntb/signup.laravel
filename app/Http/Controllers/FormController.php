@@ -2,63 +2,79 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserReuest;
+use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
 
 class FormController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function index()
     {
-
+        $users = DB::table('users_data')->get();
+        return view('index', compact('users'));
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function create()
     {
-        return view('signup.signup');
+        return view('create');
 
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param App\Http\Requests\UserRequest $request
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(UserReuest $request)
+    public function store(UserRequest $request)
     {
+        try {
+            DB::table('users_data')->insert([
+                [
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                ]
+            ]);
 
-        $data = $request->only(['first_name','last_name','email','password','password_confirmation']);
+            $alert = [
+                [
+                    'type' => 'success',
+                    'msg' => 'عملیات با موفقیت انجام شد'
+                ]
+            ];
+        } catch (\Exception $e) {
+            $alert = [
+                [
+                    'type' => 'error',
+                    'msg' => 'عملیات با خطا مواجه شد'
+                ]
+            ];
+        }
 
-        DB::table('users_data')->insert([
-            [
-                'first_name' => $data['first_name'],
-                'last_name' => $data['last_name'],
-                'email' => $data['email'],
-                'password' => $data['password'],
-            ]
-        ]);
+        $request->session()->flash('alert', $alert);
 
-        $request->session()->flash('alert-success', 'Success');
-
-        return redirect("/home2");
+        return redirect('/user');
 
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -69,48 +85,84 @@ class FormController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return \Illuminate\View\View
      */
     public function edit($id)
     {
         $user = DB::table('users_data')->find($id);
 
-        return view('edit.edit' ,compact('user'));
+        return view('edit', compact('user'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param UserRequest $request
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UserReuest $request, $id)
+    public function update(UserRequest $request, $id)
     {
-        $data = $request->only(['first_name','last_name','email','password']);
+        $user = DB::table('users_data')->where('id', $id);
+        try {
+            $user->update(
+                [
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'email' => $request->email
+                ]
+            );
 
-        $user = DB::table('users_data')->where('id',$id);
-        $user->update([
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'] ,
-            'email' => $data['email'],
-            'password' => $data['password']
-        ]);
+            $alert = [
+                [
+                    'type' => 'success',
+                    'msg' => 'عملیات با موفقیت انجام شد'
+                ]
+            ];
+        } catch (\Exception $e) {
 
-        $request->session()->flash('alert-success', 'Success');
+            $alert = [
+                [
+                    'type' => 'error',
+                    'msg' => 'عملیات با خطا مواجه شد'
+                ]
+            ];
+        }
+        $request->session()->flash('alert', $alert);
 
-        return redirect("/home2");
+        return back();
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return \illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {
-        //
+        $user = DB::table('users_data')->where('id', $id);
+        try{
+            $user->delete();
+            $alert = [
+                [
+                    'type' => 'success',
+                    'msg' => 'عملیات حذف با موفقیت انجام شد'
+                ]
+            ];
+        }
+        catch (\Exception $e){
+            $alert = [
+                [
+                    'type' => 'error',
+                    'msg' => 'عملیات حذف با خطا مواجه شد'
+                ]
+            ];
+        }
+
+        session()->flash('alert', $alert);
+        return back();
+
     }
 }

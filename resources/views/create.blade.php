@@ -1,6 +1,6 @@
-@extends('signup.signup-frame')
+@extends('layout')
 
-@section('title','ویرایش اطلاعات')
+@section('title','صفحه ثبت نام')
 @push('script')
     <script type="text/javascript" src="/assets/js/js-signup.js"></script>
 @endpush
@@ -19,28 +19,33 @@
                             <img class="register-img" src="/assets/img/register.jpg">
                         </div>
                         <div class="column">
-                                <form action="/user/{{ $user->id }}" method="post" class="ui form" id="signup-form" >
+
+                            <form action="{{ url("/user") }}" method="post" class="ui form" id="signup-form" >
                                 @csrf
-                                @method('PUT')
+                                @method('POST')
+                                <a  href="{{url("/user")}}" class="">
+                                <i class="arrow left violet icon"></i>
+
+                                </a>
                                 <h1 class="ui center aligned header">
-                                    ویرایش
+                                    عضویت
                                 </h1>
 
                                 <div class=" required field">
                                     <label for="first_name">نام</label>
                                     <div class="ui icon input">
-                                        <input type="text" name="first_name" id="first_name" class="input" placeholder="نام" value="{{$user->first_name}}">
+                                        <input type="text" name="first_name" id="first_name" class="input" placeholder="نام" value="{{old('first_name') ?? ''}}">
                                         <i class="user icon"></i>
                                     </div>
                                     @error('first_name')
-                                    <div class="ui red message">{{$message}}</div>
+                                        <div class="ui red message">{{$message}}</div>
                                     @enderror
                                 </div>
 
                                 <div class="required field">
                                     <label for="last_name">نام خانوادگی</label>
                                     <div class="ui icon input">
-                                        <input type="text" name="last_name" id="last_name" class="input" placeholder="نام خانوادگی" value="{{$user->last_name}}">
+                                        <input type="text" name="last_name" id="last_name" class="input" placeholder="نام خانوادگی" value="{{old('last_name') ?? '' }}">
                                         <i class="user icon"></i>
                                     </div>
                                     @error('last_name')
@@ -49,9 +54,9 @@
                                 </div>
 
                                 <div class="required field">
-                                    <label for="email">ایمیل</label>
+                                    <label for="email">پست الکترونیکی</label>
                                     <div class="ui icon input">
-                                        <input name="email" id="email" class="input" placeholder="ایمیل" value="{{$user->email}}">
+                                        <input name="email" id="email" class="input" placeholder="پست الکترونیکی" value="{{old('email') ?? ''}}">
                                         <i class="envelope icon"></i>
                                     </div>
                                     @error('email')
@@ -62,7 +67,7 @@
                                 <div class="required field">
                                     <label for="password">رمز عبور</label>
                                     <div class="ui icon input">
-                                        <input type="password" name="password" id="password" class="input" value="{{$user->password}}">
+                                        <input type="password" name="password" id="password" class="input" placeholder="رمز عبور">
                                         <i class="lock icon"></i>
                                     </div>
                                     @error('password')
@@ -73,7 +78,7 @@
                                 <div class="required field">
                                     <label for="password_confirmation"> تکرار رمز عبور</label>
                                     <div class="ui icon input">
-                                        <input type="password" name="password_confirmation" id="password_confirmation" class="input" placeholder="تکرار رمز عبور" >
+                                        <input type="password" name="password_confirmation" id="password_confirmation" class="input" placeholder="تکرار رمز عبور">
                                         <i class="lock icon"></i>
                                     </div>
                                     @error('password_confirmation')
@@ -92,12 +97,12 @@
                                     <div class="ui red message">{{$message}}</div>
                                     @enderror
                                 </div>
-                                <button class="fluid ui primary submit button" name="register" id="button" type="submit">ثبت</button>
+                                <button class="fluid ui primary submit button" name="register" id="button" type="submit">عضویت</button>
                             </form>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 @endsection

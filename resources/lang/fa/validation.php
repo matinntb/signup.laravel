@@ -140,7 +140,6 @@ return [
     |
     */
     'attributes' => [
-        "checkbox" => " کادر انتخابی",
         "name" => "نام",
         "firstname" => "نام",
         "lastname" => "نام خانوادگی",

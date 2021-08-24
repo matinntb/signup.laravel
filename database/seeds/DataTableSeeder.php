@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-
+use Illuminate\Support\Facades\Hash;
 class DataTableSeeder extends Seeder
 {
     /**
@@ -16,19 +16,19 @@ class DataTableSeeder extends Seeder
                 'first_name' => 'متینه',
                 'last_name' => 'نعمت بخش',
                 'email' => 'nematbakhsh78@gmail.com',
-                'password' => 'q1111',
+                'password' => Hash::make('q1111'),
             ],
             [
                 'first_name' => 'علی',
                 'last_name' => 'زارع',
                 'email' => 'alizare@gmail.com',
-                'password' => 'a1111',
+                'password' => Hash::make('q1111'),
             ],
             [
                 'first_name' => 'زهرا',
                 'last_name' => 'علیخانی',
                 'email' => 'zahraalikhani@gmail.com',
-                'password' => 'z1111',
+                'password' => Hash::make('q1111'),
             ],
         ]);
 
