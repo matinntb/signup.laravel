@@ -20,9 +20,9 @@
                         </div>
                         <div class="column">
 
-                            <form action="{{url("/password/$user->id" )}}" method="post" class="ui form" id="signup-form">
+                            <form action="{{url("/password/$user->id")}}" method="post" class="ui form" id="signup-form">
                                 @csrf
-                                @method('PUT')
+                                @method('POST')
                                 <a  href="{{url("/user")}}" class="">
                                     <i class="arrow left violet icon"></i>
 

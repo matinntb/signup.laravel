@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\UserRequest;
+use App\Model\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -17,7 +19,7 @@ class FormController extends Controller
      */
     public function index()
     {
-        $users = DB::table('users_data')->get();
+        $users = User::all();
         return view('index', compact('users'));
     }
 
@@ -41,13 +43,12 @@ class FormController extends Controller
     public function store(UserRequest $request)
     {
         try {
-            DB::table('users_data')->insert([
-                [
+             User::create([
+
                     'first_name' => $request->first_name,
                     'last_name' => $request->last_name,
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
-                ]
             ]);
 
             $alert = [
@@ -90,7 +91,7 @@ class FormController extends Controller
      */
     public function edit($id)
     {
-        $user = DB::table('users_data')->find($id);
+        $user = User::find($id);
 
         return view('edit', compact('user'));
     }
@@ -104,7 +105,7 @@ class FormController extends Controller
      */
     public function update(UserRequest $request, $id)
     {
-        $user = DB::table('users_data')->where('id', $id);
+        $user = User::find($id);
         try {
             $user->update(
                 [
@@ -142,7 +143,7 @@ class FormController extends Controller
      */
     public function destroy($id)
     {
-        $user = DB::table('users_data')->where('id', $id);
+        $user = User::find($id);
         try{
             $user->delete();
             $alert = [
@@ -165,4 +166,48 @@ class FormController extends Controller
         return back();
 
     }
+    public function ShowEditForm($id)
+    {
+        $user = User::find($id);
+        return view('edit-password',compact('user'));
+
+    }
+
+    public function ChangePassword(ChangePasswordRequest $request, $id)
+    {
+        $user = User::where('id', $id);
+
+        $user_password = User::select('password')->where('id', $id)->get();
+
+        if ( Hash::check($request->current_password, $user_password[0]->password)){
+
+            $user->update(
+                [
+                    'password' => Hash::make($request->new_password)
+                ]
+            );
+            $alert = [
+                [
+                    'type' => 'success',
+                    'msg' => 'تغییر رمز عبور با موفقیت انجام شد'
+                ]
+            ];
+
+        }
+        else{
+            echo 'false';
+            $alert = [
+                [
+                    'type' => 'error',
+                    'msg' => 'رمز عبور فعلی صحیح نیست'
+                ]
+            ];
+        }
+
+        $request->session()->flash('alert', $alert);
+
+        return back();
+
+    }
+
 }
