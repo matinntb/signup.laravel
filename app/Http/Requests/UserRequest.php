@@ -26,7 +26,7 @@ class UserRequest extends FormRequest
         return [
             'first_name' => 'required|min:2|max:30|alpha_space', //alpha_space use Anetwork/Validation library. to use it Enter 'composer require Anetwork/Validation' in terminal
             'last_name' => 'required|min:2|max:30|alpha_space',
-            'email' => ['required','email','max:100'],
+            'email' => ['required','email','max:100',Rule::unique('users_data')->ignore($this->user)],
             'password' => [Rule::requiredIf($this->isMethod('post')),'min:5','max:30','confirmed','regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{5,30}$/'],
             'checkbox' => [Rule::requiredIf($this->isMethod('post'))]
         ];

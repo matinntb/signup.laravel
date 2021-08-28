@@ -166,14 +166,14 @@ class FormController extends Controller
         return back();
 
     }
-    public function ShowEditForm($id)
+    public function showEditForm($id)
     {
         $user = User::find($id);
         return view('edit-password',compact('user'));
 
     }
 
-    public function ChangePassword(ChangePasswordRequest $request, $id)
+    public function changePassword(ChangePasswordRequest $request, $id)
     {
         $user = User::where('id', $id);
 
@@ -195,7 +195,6 @@ class FormController extends Controller
 
         }
         else{
-            echo 'false';
             $alert = [
                 [
                     'type' => 'error',
