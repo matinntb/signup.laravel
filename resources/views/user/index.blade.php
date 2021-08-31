@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('title','فهرست کاربران')
 @push('script')

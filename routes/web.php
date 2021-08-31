@@ -17,6 +17,8 @@ Route::get('/', function () {
 
 Route::resource('/user','FormController');
 Route::prefix('password')->group(function () {
-    Route::get('{id}/edit','FormController@ShowEditForm');
-    Route::post('{id}','FormController@ChangePassword');
+    Route::get('{id}/edit','FormController@showEditForm');
+    Route::post('{id}','FormController@changePassword');
 });
+
+Route::get('university', 'FormController@university');

@@ -4,7 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\UserRequest;
-use App\Model\User;
+use App\Models\College;
+use App\Models\Course;
+use App\Models\Field;
+use App\Models\Grade;
+use App\Models\Head;
+use App\Models\Manager;
+use App\Models\Professor;
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -20,7 +28,7 @@ class FormController extends Controller
     public function index()
     {
         $users = User::all();
-        return view('index', compact('users'));
+        return view('user.index', compact('users'));
     }
 
     /**
@@ -30,7 +38,7 @@ class FormController extends Controller
      */
     public function create()
     {
-        return view('create');
+        return view('user.create');
 
     }
 
@@ -93,7 +101,7 @@ class FormController extends Controller
     {
         $user = User::find($id);
 
-        return view('edit', compact('user'));
+        return view('user.edit', compact('user'));
     }
 
     /**
@@ -169,13 +177,13 @@ class FormController extends Controller
     public function showEditForm($id)
     {
         $user = User::find($id);
-        return view('edit-password',compact('user'));
+        return view('password.edit-password',compact('user'));
 
     }
 
     public function changePassword(ChangePasswordRequest $request, $id)
     {
-        $user = User::where('id', $id);
+        $user = User::where('id', $id)->first();
 
         $user_password = User::select('password')->where('id', $id)->get();
 
@@ -209,4 +217,105 @@ class FormController extends Controller
 
     }
 
+    public function university()
+    {
+        $managers = Manager::all();
+        $colleges = College::all();
+        $heads = Head::all();
+        $fields = Field::all();
+        $students = Student::all();
+        $grades = Grade::all();
+        $professors = Professor::all();
+        $courses = Course::all();
+
+        /**
+         * ----Manager-College relationship----
+         */
+        foreach ($managers as $manager){
+            dump('مدیر '.$manager->firstname.$manager->lastname.' دانشکده ' .$manager->college->name);
+        }
+        foreach ($colleges as $college){
+            dump('دانشکده '.$college->name.' مدیر '. $college->manager->firstname.$college->manager->lastname);
+        }
+
+        /**
+         * ----Head-Field relationship----
+         */
+        foreach ($heads as $head){
+            dump('مدیرگروه '.$head->firstname.' '.$head->lastname.' رشته '. $head->field->name);
+        }
+        foreach ($fields as $field){
+            dump('رشته '.$field->name. ' مدیرگروه'.$field->head->firstname.' '.$field->head->lastname);
+        }
+
+        /**
+         * ----College-Field relationship----
+         */
+        foreach ($colleges as $college){
+            foreach ($college->fields as $field){
+                dump( '  دانشکده  '.$college->name.'  رشته  '.$field->name);
+            }
+        }
+        foreach ($fields as $field){
+            dump('رشته '.$field->name.' دانشکده '.$field->college->name);
+        }
+
+        /**
+         * ----Student-Field relationship----
+         */
+        foreach ($fields as $field){
+            foreach ($field->students as $student){
+                dump('رشته '.$field->name.' دانشجو '.$student->firstname.' '.$student->lastname);
+
+            }
+        }
+        foreach ($students as $student){
+            dump('دانشجو '.$student->firstname.' '.$student->lastname.' رشته '.$student->field->name);
+        }
+
+        /**
+         * ----Student-Grade relationship----
+         */
+        foreach ($grades as $grade){
+            foreach ($grade->students as $student){
+                dump('مقطع '.$grade->name.' دانشجو '.$student->firstname.' '.$student->lastname);
+
+            }
+        }
+        foreach ($students as $student){
+            dump($student->grade);
+            dump('دانشجو '.$student->firstname.' '.$student->lastname.' مقطع '.$student->grade->name);
+        }
+
+        /**
+         * ----Professor-Course relationship----
+         */
+        foreach ($professors as $professor){
+            foreach ($professor->courses as $course){
+                dump('استاد '.$professor->firstname.' '.$professor->lastname.' درس '.$course->name);
+                dump($course->pivot->term_id);
+            }
+        }
+        foreach ($courses as $course){
+            foreach ($course->professors as $professor){
+                dump(' درس '.$course->name.' استاد '.$professor->firstname.' '.$professor->lastname);
+            }
+
+        }
+
+        /**
+         * ----Student-Course relationship----
+         */
+        foreach ($students as $student){
+            foreach ($student->courses as $course){
+                dump('دانشجو '.$student->firstname.' '.$student->lastname.' درس '.$course->name);
+            }
+        }
+        foreach ($courses as $course){
+            foreach ($course->students as $student){
+                dump(' درس '.$course->name.' دانشجو '.$student->firstname.' '.$student->lastname.' نمره '.$student->pivot->score);
+            }
+
+        }
+    }
 }
