@@ -6,6 +6,7 @@ use App\Models\Field;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Grade;
 use App\Models\Course;
+use App\Models\ProfessorCourse;
 
 class Student extends Model
 {
@@ -20,5 +21,9 @@ class Student extends Model
     public function courses(){
 
         return $this->belongsToMany(Course::class,'student_course','student_id','professor_course_id')->withPivot('score');
+    }
+    public function professorCourses(){
+
+        return $this->belongsToMany(ProfessorCourse::class,'student_course','student_id','professor_course_id');
     }
 }

@@ -290,6 +290,8 @@ class FormController extends Controller
         /**
          * ----Professor-Course relationship----
          */
+        $professors = Professor::all();
+
         foreach ($professors as $professor){
             foreach ($professor->courses as $course){
                 dump('استاد '.$professor->firstname.' '.$professor->lastname.' درس '.$course->name);
@@ -299,6 +301,8 @@ class FormController extends Controller
         foreach ($courses as $course){
             foreach ($course->professors as $professor){
                 dump(' درس '.$course->name.' استاد '.$professor->firstname.' '.$professor->lastname);
+                dump($professor->pivot->term_id);
+
             }
 
         }
@@ -307,12 +311,13 @@ class FormController extends Controller
          * ----Student-Course relationship----
          */
         foreach ($students as $student){
-            foreach ($student->courses as $course){
-                dump('دانشجو '.$student->firstname.' '.$student->lastname.' درس '.$course->name);
+            foreach ($student->professorCourses as $professorCourse){
+                dump('دانشجو '.$student->firstname.' '.$student->lastname.' درس '.$professorCourse->course->name. ' ترم '.$professorCourse->term->TermDate);
             }
         }
         foreach ($courses as $course){
-            foreach ($course->students as $student){
+            foreach ($course->professorCourses as $professorCourse){
+                foreach ($professorCourse->students as $student)
                 dump(' درس '.$course->name.' دانشجو '.$student->firstname.' '.$student->lastname.' نمره '.$student->pivot->score);
             }
 
