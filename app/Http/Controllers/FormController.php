@@ -219,37 +219,37 @@ class FormController extends Controller
 
     public function university()
     {
-        $managers = Manager::all();
-        $colleges = College::all();
-        $heads = Head::all();
-        $fields = Field::all();
-        $students = Student::all();
-        $grades = Grade::all();
-        $professors = Professor::all();
-        $courses = Course::all();
+        $managers = Manager::with('college')->get();
+        $colleges = College::with('manager','fields')->get();
+        $heads = Head::with('field')->get();
+        $fields = Field::with('head','college','students')->get();
+        $students = Student::with('field','grade','professorCourses')->get();
+        $grades = Grade::with('students')->get();
+        $professors = Professor::with('courses','professorCourse')->get();
+        $courses = Course::with('professors','professorCourses')->get();
 
         /**
-         * ----Manager-College relationship----
+         * ----Manager-College relationship---->one to one
          */
         foreach ($managers as $manager){
-            dump('مدیر '.$manager->firstname.$manager->lastname.' دانشکده ' .$manager->college->name);
+            dump('مدیر '.$manager->firstname.' '.$manager->lastname.' دانشکده ' .$manager->college->name);
         }
         foreach ($colleges as $college){
-            dump('دانشکده '.$college->name.' مدیر '. $college->manager->firstname.$college->manager->lastname);
+            dump('دانشکده '.$college->name.' مدیر '. $college->manager->firstname.' '.$college->manager->lastname);
         }
 
         /**
-         * ----Head-Field relationship----
+         * ----Head-Field relationship---->one to one
          */
         foreach ($heads as $head){
             dump('مدیرگروه '.$head->firstname.' '.$head->lastname.' رشته '. $head->field->name);
         }
         foreach ($fields as $field){
-            dump('رشته '.$field->name. ' مدیرگروه'.$field->head->firstname.' '.$field->head->lastname);
+            dump('رشته '.$field->name. ' مدیرگروه '.$field->head->firstname.' '.$field->head->lastname);
         }
 
         /**
-         * ----College-Field relationship----
+         * ----College-Fields relationship---->one to many
          */
         foreach ($colleges as $college){
             foreach ($college->fields as $field){
@@ -259,9 +259,9 @@ class FormController extends Controller
         foreach ($fields as $field){
             dump('رشته '.$field->name.' دانشکده '.$field->college->name);
         }
-
+//
         /**
-         * ----Student-Field relationship----
+         * ----Students-Field relationship---->one to many
          */
         foreach ($fields as $field){
             foreach ($field->students as $student){
@@ -274,7 +274,7 @@ class FormController extends Controller
         }
 
         /**
-         * ----Student-Grade relationship----
+         * ----Students-Grade relationship---->one to many
          */
         foreach ($grades as $grade){
             foreach ($grade->students as $student){
@@ -283,15 +283,12 @@ class FormController extends Controller
             }
         }
         foreach ($students as $student){
-            dump($student->grade);
             dump('دانشجو '.$student->firstname.' '.$student->lastname.' مقطع '.$student->grade->name);
         }
 
         /**
-         * ----Professor-Course relationship----
+         * ----Professor-Course relationship---->many to many
          */
-        $professors = Professor::all();
-
         foreach ($professors as $professor){
             foreach ($professor->courses as $course){
                 dump('استاد '.$professor->firstname.' '.$professor->lastname.' درس '.$course->name);
@@ -308,7 +305,7 @@ class FormController extends Controller
         }
 
         /**
-         * ----Student-Course relationship----
+         * ----Student-Course relationship---->many to many
          */
         foreach ($students as $student){
             foreach ($student->professorCourses as $professorCourse){
@@ -321,6 +318,29 @@ class FormController extends Controller
                 dump(' درس '.$course->name.' دانشجو '.$student->firstname.' '.$student->lastname.' نمره '.$student->pivot->score);
             }
 
+        }
+
+        /**
+         * ----Professor-Student relationship----
+         */
+        foreach ($professors as $professor){
+            dump(' استاد '.$professor->firstname.' '.$professor->lastname);
+            foreach ($professor->courses as $course){
+                foreach ($course->professorCourses as $professorCourse){
+                    foreach ($professorCourse->students as $student){
+                        dump(' درس '.$course->name.' دانشجو '.$student->firstname.' '.$student->lastname);
+                    }
+                }
+
+            }
+        }
+        foreach ($professors as $professor){
+            dump(' استاد '.$professor->firstname.' '.$professor->lastname);
+            foreach ($professor->professorCourse as $professorCourse){
+                foreach ($professorCourse->students as $student){
+                   dump( ' دانشجو '.$student->firstname.' '.$student->lastname);
+                }
+            }
         }
     }
 }

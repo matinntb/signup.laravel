@@ -18,10 +18,7 @@ class Student extends Model
 
         return $this->belongsTo(Grade::class);
     }
-    public function courses(){
 
-        return $this->belongsToMany(Course::class,'student_course','student_id','professor_course_id')->withPivot('score');
-    }
     public function professorCourses(){
 
         return $this->belongsToMany(ProfessorCourse::class,'student_course','student_id','professor_course_id');
