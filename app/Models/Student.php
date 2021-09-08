@@ -23,4 +23,6 @@ class Student extends Model
 
         return $this->belongsToMany(ProfessorCourse::class,'student_course','student_id','professor_course_id');
     }
+
+
 }

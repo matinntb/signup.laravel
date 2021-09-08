@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Professor;
 use App\Models\Student;
 use App\Models\ProfessorCourse;
+use App\Models\StudentBachlor;
+use App\Models\StudentMaster;
 
 class Course extends Model
 {
@@ -17,5 +19,14 @@ class Course extends Model
 
         return $this->hasMany(ProfessorCourse::class);
     }
+    public function studentBachlor(){
 
+        return $this->morphedByMany(StudentBachlor::class,'CoursTake','course_take',
+            'course_id','CoursTake_id');
+    }
+    public function studentMaster(){
+
+        return $this->morphedByMany(StudentMaster::class,'CoursTake','course_take',
+            'course_id','CoursTake_id');
+    }
 }

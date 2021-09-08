@@ -11,10 +11,6 @@ class ProfessorCourse extends Model
 {
     protected $table = 'professor_course';
 
-    public function students(){
-
-        return $this->belongsToMany(Student::class,'student_course','professor_course_id','student_id')->withPivot('score');
-    }
     public function professor(){
 
         return $this->belongsTo(Professor::class);
@@ -22,6 +18,10 @@ class ProfessorCourse extends Model
     public function course(){
 
         return $this->belongsTo(Course::class);
+    }
+    public function students(){
+
+        return $this->belongsToMany(Student::class,'student_course','professor_course_id','student_id')->withPivot('score');
     }
     public function term(){
 

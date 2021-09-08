@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Database\Eloquent\Builder;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\College;
@@ -16,7 +16,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-
+use App\Models\StudentBachlor;
+use App\Models\StudentMaster;
 
 class FormController extends Controller
 {
@@ -223,10 +224,10 @@ class FormController extends Controller
         $colleges = College::with('manager','fields')->get();
         $heads = Head::with('field')->get();
         $fields = Field::with('head','college','students')->get();
-        $students = Student::with('field','grade','professorCourses')->get();
+        $students = Student::with('field','grade','professorCourses.course','professorCourses.term')->get();
         $grades = Grade::with('students')->get();
-        $professors = Professor::with('courses','professorCourse')->get();
-        $courses = Course::with('professors','professorCourses')->get();
+        $professors = Professor::with('courses','professorCourse.students')->get();
+        $courses = Course::with('professors','professorCourses.students')->get();
 
         /**
          * ----Manager-College relationship---->one to one
@@ -341,6 +342,63 @@ class FormController extends Controller
                    dump( ' دانشجو '.$student->firstname.' '.$student->lastname);
                 }
             }
+        }
+        /**
+         * ----Students have course----
+         */
+            foreach ($students as $student){
+                dump($student->professorCourses);
+
+            }
+            $students = Student::has('professorCourses')->get();
+
+            foreach ($students as $student) {
+
+                dump($student->firstname . ' ' . $student->lastname);
+            }
+        /**
+         * ----Students have more than one course----
+         */
+            $students = Student::has('professorCourses', '>', 1)->get();
+
+            foreach ($students as $student){
+
+                dump($student->firstname.' '.$student->lastname);
+            }
+
+            $students = Student::whereHas('professorCourses', function (Builder $query) {
+                $query->where('course_id', 'like', '3');
+            })->get();
+
+            foreach ($students as $student){
+                dump($student);
+            }
+    }
+
+    public function polymorph(){
+        /**
+         * ----StudentBachlor-course----
+         */
+        $StudentBachlor = StudentBachlor::all();
+        foreach ($StudentBachlor as $studentB) {
+            foreach ($studentB->course as $course) {
+                dump($studentB->firstname . ' ' . $studentB->lastname . ' ' . $course->name);
+            }
+        }
+
+        $courses = Course::all();
+        foreach ($courses as $course) {
+            foreach ($course->studentBachlor as $studentB) {
+                dump($studentB->firstname . ' ' . $studentB->lastname . ' ' . $course->name);
+            }
+
+        }
+        $StudentBachlor = StudentBachlor::withCount(['course'=>function($query){
+            $query->where('name','like','ریاضی مهندسی');
+        }])->get();
+
+        foreach ($StudentBachlor as $studentB) {
+            dump($studentB->course_count);
         }
     }
 }

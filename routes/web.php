@@ -22,3 +22,4 @@ Route::prefix('password')->group(function () {
 });
 
 Route::get('university', 'FormController@university');
+Route::get('polymorph', 'FormController@polymorph');
